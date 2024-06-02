@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Form />
     </div>
   );
 }
 
-export default App;
+function Header() {
+  return (
+    <div className="header-box">
+      <span className="Logo">Journery with the Boys</span>
+      <img src="Minions.jpeg" alt="Pic of minions" />
+    </div>
+  );
+}
+function Form() {
+  return <h1></h1>;
+}
+function PackingList() {}
+function Footer() {}
