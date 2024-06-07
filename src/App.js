@@ -1,17 +1,23 @@
 import { useState } from "react";
 
-const listOfItems = [
-  { id: 1, description: "Kanzu", quantity: 5, packed: true },
-  { id: 2, description: "Trousers", quantity: 4, packed: false },
-  { id: 3, description: "Kikoi", quantity: 3, packed: false },
-];
+// const listOfItems = [
+//   { id: 1, description: "Kanzu", quantity: 5, packed: true },
+//   { id: 2, description: "Trousers", quantity: 4, packed: false },
+//   { id: 3, description: "Kikoi", quantity: 3, packed: false },
+// ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAddItem(item) {
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div className="app">
       <Header />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItem} />
+      <PackingList items={items} />
       <Footer />
     </div>
   );
@@ -26,7 +32,7 @@ function Header() {
   );
 }
 
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -36,12 +42,13 @@ function Form() {
     if (!description) return;
 
     const newItem = {
-      id: Date.now(),
       description,
       quantity,
       packed: false,
+      id: Date.now(),
     };
-    console.log(newItem);
+
+    onAddItems(newItem);
 
     setDescription("");
     setQuantity(1);
@@ -72,23 +79,23 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {listOfItems.map((item) => (
-          <Item items={item} key={item.id} />
+        {items.map((item) => (
+          <Item item={item} key={item.id} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ items }) {
+function Item({ item }) {
   return (
     <li>
-      <span style={items.packed ? { textDecoration: "line-through" } : {}}>
-        {items.quantity} {items.description}
+      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
+        {item.quantity} {item.description}
       </span>
       <button>❌</button>
     </li>
