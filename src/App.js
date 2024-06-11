@@ -1,10 +1,7 @@
 import { useState } from "react";
-
-// const listOfItems = [
-//   { id: 1, description: "Kanzu", quantity: 5, packed: true },
-//   { id: 2, description: "Trousers", quantity: 4, packed: false },
-//   { id: 3, description: "Kikoi", quantity: 3, packed: false },
-// ];
+import Header from "./Header";
+import Form from "./Form";
+import PackingList from "./PackingList";
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -25,6 +22,13 @@ export default function App() {
     );
   }
 
+  function handleClearItems() {
+    const confrimed = window.confirm(
+      "Are you sure you want to delete all items on the list"
+    );
+    if (confrimed) setItems([]);
+  }
+
   return (
     <div className="app">
       <Header />
@@ -33,122 +37,10 @@ export default function App() {
         items={items}
         onItemDelete={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearItems={handleClearItems}
       />
       <Footer items={items} />
     </div>
-  );
-}
-
-function Header() {
-  return (
-    <div className="header-box">
-      <span className="logo">A Trip with the Boys</span>
-      <img src="Minions.jpeg" alt="Pic of minions" />
-    </div>
-  );
-}
-
-function Form({ onAddItems }) {
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(1);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (!description) return;
-
-    const newItem = {
-      description,
-      quantity,
-      packed: false,
-      id: Date.now(),
-    };
-
-    onAddItems(newItem);
-
-    setDescription("");
-    setQuantity(1);
-  }
-
-  return (
-    <form className="add-form" onSubmit={handleSubmit}>
-      <h3>Let's plan your packing list</h3>
-      <select
-        className="choose"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-      >
-        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <option value={num} key={num}>
-            {num}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeholder="Your Travel List ?"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <button className="button">Add Item</button>
-    </form>
-  );
-}
-
-function PackingList({ items, onItemDelete, onToggleItem }) {
-  const [sortBy, setSortBy] = useState("input");
-
-  let sortedItems;
-
-  if (sortBy === "input") sortedItems = items;
-
-  if (sortBy === "description")
-    sortedItems = items
-      .slice()
-      .sort((a, b) => a.description.localeCompare(b.description));
-
-  if (sortBy === "packed")
-    sortedItems = items
-      .slice()
-      .sort((a, b) => Number(a.packed) - Number(b.packed));
-
-  return (
-    <div className="list">
-      <ul>
-        {sortedItems.map((item) => (
-          <Item
-            item={item}
-            onItemDelete={onItemDelete}
-            key={item.id}
-            onToggleItem={onToggleItem}
-          />
-        ))}
-      </ul>
-
-      <div className="actions">
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-          <option value="input">Sort by input order</option>
-          <option value="description">Sort by description</option>
-          <option value="packed">Sort by packed status</option>
-        </select>
-      </div>
-    </div>
-  );
-}
-
-function Item({ item, onItemDelete, onToggleItem }) {
-  return (
-    <li>
-      <input
-        type="checkbox"
-        value={item.packed}
-        onChange={() => onToggleItem(item.id)}
-      />
-      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity} {item.description}
-      </span>
-      <button onClick={() => onItemDelete(item.id)}>❌</button>
-    </li>
   );
 }
 
